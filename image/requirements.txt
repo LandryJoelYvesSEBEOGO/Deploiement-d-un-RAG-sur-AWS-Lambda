@@ -1,0 +1,41 @@
+# Web API dependencies
+fastapi>=0.95.0
+uvicorn>=0.22.0
+mangum>=0.17.0
+pydantic>=2.0.0
+
+# RAG and LLM integration
+langchain>=0.1.0
+langchain-groq>=0.1.0
+langchain-community>=0.0.1
+langchain-core>=0.1.0
+langchain-nomic>=0.0.1
+langgraph>=0.0.1
+tavily-python>=0.2.0
+chromadb>=0.4.0
+tiktoken>=0.5.0
+
+# Audio processing
+#pyaudio>=0.2.13
+wave>=0.0.2
+faster-whisper>=0.8.0
+
+# PDF and document processing
+PyPDF2>=2.0.0
+
+# Data and environment
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+
+
+# Visualization and interface
+streamlit>=1.25.0
+ipython>=8.0.0
+
+# Additional utilities
+numpy>=1.24.0
+pandas>=2.0.0
+nomic[local]
+gpt4all==0.3.0
+bs4
+pypdf
