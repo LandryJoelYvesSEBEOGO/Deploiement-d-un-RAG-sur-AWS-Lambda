@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 import {
   DockerImageFunction,
   DockerImageCode,
@@ -12,6 +13,13 @@ import { ManagedPolicy } from "aws-cdk-lib/aws-iam";
 export class DeployLangraphRagOnAwsLambdaStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+     // Create a DynamoDB table to store the query data and results.
+     const ragQueryTable = new Table(this, "RagQueryTable", {
+      partitionKey: { name: "query_id", type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
 
     // Function to handle the API requests. Uses same base image, but different handler.
     const apiImageCode = DockerImageCode.fromImageAsset("./image", {
@@ -25,6 +33,8 @@ export class DeployLangraphRagOnAwsLambdaStack extends cdk.Stack {
       memorySize: 1024,
       timeout: cdk.Duration.seconds(300),
       architecture: Architecture.X86_64,
+      environment: {
+        TABLE_NAME: ragQueryTable.tableName}
     });
 
     // Public URL for the API function.
@@ -32,6 +42,8 @@ export class DeployLangraphRagOnAwsLambdaStack extends cdk.Stack {
       authType: FunctionUrlAuthType.NONE,
     });
 
+    // Grant permissions for all resources to work together.
+    ragQueryTable.grantReadWriteData(apiFunction);
     // Grant permissions for all resources to work together.
     apiFunction.role?.addManagedPolicy(
       ManagedPolicy.fromAwsManagedPolicyName("AmazonBedrockFullAccess")

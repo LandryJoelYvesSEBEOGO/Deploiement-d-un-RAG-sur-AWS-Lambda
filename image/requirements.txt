@@ -39,3 +39,4 @@ nomic[local]
 gpt4all==0.3.0
 bs4
 pypdf
+boto3==1.34.117
